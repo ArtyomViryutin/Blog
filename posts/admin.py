@@ -1,22 +1,20 @@
 from django.contrib import admin
-
-# Register your models here.
-
 from .models import Post, Group
 
 
 class PostAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'text', 'pub_date', 'author')
 
-    #pk - primary key
-    list_display = ("pk", "text", "pub_date", "author")
+    search_fields = ('text', )
 
-    search_fields = ("text", )
+    list_filter = ('pub_date', 'author')
 
-    list_filter = ("pub_date", "author")
+    empty_value_display = '-пусто-'
 
-    empty_value_display = "-пусто-"
+
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'title', 'slug', 'description')
 
 
 admin.site.register(Post, PostAdmin)
-
-admin.site.register(Group)
+admin.site.register(Group, GroupAdmin)
