@@ -8,13 +8,6 @@
             <div class="card-header">Зарегистрироваться</div>
             <div class="card-body">
 
-                    {% for error in form.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-
-
                 <form method="post" action="{% url 'signup' %}">
                     {% csrf_token %}
 
@@ -28,8 +21,12 @@
                                     {% endif %}
                                 </div>
                         </div>
+                        {% if field.errors %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ field.errors }}
+                            </div>
+                        {% endif %}
                     {% endfor %}
-
                     <div class="col-md-6 offset-md-4">
                             <button type="submit" class="btn btn-primary">
                                 Зарегистрироваться
