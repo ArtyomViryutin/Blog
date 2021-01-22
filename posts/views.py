@@ -70,8 +70,12 @@ def post_view(request, username, post_id):
             return redirect('post', username=username, post_id=post_id)
     comments = post.comments.order_by('-created')
     form = CommentForm()
+    if request.user.is_authenticated:
+        following = Follow.objects.filter(user=request.user)
+    else:
+        following = None
     return render(request, 'post.html', context={'author': author, 'post': post, 'comments': comments,
-                                                 'form': form})
+                                                 'form': form, 'following': following})
 
 
 def post_edit(request, username, post_id):
