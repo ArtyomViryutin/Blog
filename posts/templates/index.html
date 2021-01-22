@@ -3,10 +3,10 @@
 {% block header %} Последние обновления на сайте {% endblock %}
 
 {% block content %}
-    <h1>Последние обновления на сайте </h1>
-    {% for post in posts %}
-    <h3>Автор: {{ post.author.get_full_name }}, дата публикации: {{ post.pub_date|date:"d M Y" }}</h3>
-    <p>{{ post.text|linebreaksbr }}</p>
-    {% if not forloop.last %}<hr>{% endif %}
+    {% include 'menu.html' with index=True %}
+    <h1>Последние обновления на сайте</h1>
+    {% for post in page %}
+    {% include 'post_item.html' with post=post %}
     {% endfor %}
+    <div class="d-flex justify-content-center">{% include 'paginator.html' with page=page %}</div>
 {% endblock %}

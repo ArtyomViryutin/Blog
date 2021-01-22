@@ -1,9 +1,10 @@
 {% extends "base.html" %}
-{% block title %} Записи сообщества {{ group.title }} {% endblock %}
+{% block title %} {{ request.user }}123 {% endblock %}
+{% block header %} {{ request.user }} 213{% endblock %}
 
 {% block content %}
-    <h1>{{ group.title }}</h1>
-    <p>{{ group.description }}</p>
+    {% include 'menu.html' with follow=True %}
+    <h1>Последние обновления на сайте</h1>
     {% for post in page %}
     {% include 'post_item.html' with post=post %}
     {% endfor %}

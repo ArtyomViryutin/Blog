@@ -1,15 +1,15 @@
-from django import forms
-from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 
-from .models import Group
+from .models import Comment, Post
 
 
-class PostForm(forms.Form):
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=False)
-    text = forms.CharField(widget=forms.Textarea)
+class PostForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ['group', 'text', 'image']
 
-    def clean_text(self):
-        text = self.cleaned_data['text']
-        if not text:
-            raise ValidationError('Text cannot be empty')
-        return text
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
