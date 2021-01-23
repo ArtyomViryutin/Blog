@@ -5,6 +5,7 @@ import pytest
 from django.contrib.admin.sites import site
 from django.contrib.auth import get_user_model
 from django.db.models import fields
+from django.db import models
 
 try:
     from posts.models import Post
@@ -33,6 +34,59 @@ def search_refind(execution, user_code):
 
 
 class TestPost:
+    @pytest.mark.django_db(transaction=True)
+    def test_post_fields(self, post):
+        model_fields = Post._meta.fields
+        text_filed = search_field(model_fields, 'text')
+        assert text_filed is not None, 'Добавьте свойство `text` модели `Post'
+        assert type(text_filed) == fields.TextField, 'Свойство `text` модели `Post` должно быть текстовым `TextField`'
+        assert text_filed.verbose_name == 'Текст', \
+            'Неправильное подробное имя `verbose_name` свойства `text` модели `Post`'
+        assert text_filed.help_text == 'Введите содержимое поста', \
+            'Неправильный вспомогательный текст `help_text` свойства `text` модели `Post`'
+
+        pub_date_field = search_field(model_fields, 'pub_date')
+        assert pub_date_field is not None, 'Добавьте свойство `pub_date` модели `Post`'
+        assert type(pub_date_field) == fields.DateTimeField, \
+            'Своствой `pub_date` модели `Post` должно быть датой и временим `DateTimeField`'
+        assert pub_date_field.verbose_name == 'Дата публикации', \
+            'Неправильное подробное имя свойства `pub_date` модели `Post`'
+        assert pub_date_field.auto_now_add, 'Свойство `pub_date` модели `Post` должно быть `auto_now_add`'
+
+        author_field = search_field(model_fields, 'author_id')
+        assert author_field is not None, \
+            'Добавьте свойство `author` в модеил `Post`, содержащее информицию о пользователе, который создал пост'
+        assert type(author_field) == fields.related.ForeignKey, \
+            'Свойство `author` модели `Post` должно быть ссылкой на другую модель `ForeignKey`'
+        assert author_field.related_model == get_user_model(), \
+            'Своство `author` модели `Post` должно быть ссылкой на модель пользователя `User`'
+
+        group_field = search_field(model_fields, 'group_id')
+        assert group_field is not None, \
+            'Добавье свойство `group` в модели `Post`, содержащее информацию о группе, к которой принадлежит пост'
+        assert type(group_field) == fields.related.ForeignKey, \
+            'Свойство `group` модели `Post` должно быть ссылкой на другую модель `ForeignKey`'
+        assert group_field.related_model == Group, \
+            'Свойство `group` модели `Post` должно быть ссылкой на группу `Group`'
+        assert group_field.null, 'Свойство `group` может быть нулевым  `null=True`'
+        assert group_field.blank, 'Свойство `group` не обязательно для заполнения `blank=True`'
+        assert group_field.verbose_name == 'Группа', \
+            'Неправильное подробное имя `vebose_name` свойства `group` модели `Post`'
+        assert group_field.help_text == 'Выберите группу, к которой относится пост', \
+            'Неправильный вспомогательный текст `help_text` свойства `group` модели `Post`'
+
+        image_field = search_field(model_fields, 'image')
+        assert image_field is not None, 'Добавьте свойство `image` модели `Post'
+        assert image_field.upload_to == 'posts/', 'Неправильный путь для загрузки изобарежния `image` модели `Post`'
+        assert image_field.null, 'Свойство `image` может быть нулевым  `null=True`'
+        assert image_field.blank, 'Свойство `image` не обязательно для заполнения `blank=True`'
+        assert image_field.verbose_name == 'Изображение', \
+            'Неправильнео подробное имя `verbose_name` свойства `image` модели `Post`'
+        assert image_field.help_text == 'Загрузите изображение', \
+            'Неправильный вспомогательный текст `help_text` свойства `image` модели `Post`'
+
+        assert post.__str__() == post.text[:15], \
+            'Метод `__str__` модели `Post` должнен возвращать первые 15 символов свойства `text` '
 
     def test_post_model(self):
         model_fields = Post._meta.fields
@@ -111,6 +165,26 @@ class TestPost:
 
 
 class TestGroup:
+    @pytest.mark.django_db(transaction=True)
+    def test_group_fields(self, group):
+        model_fields = Group._meta.fields
+
+        title_field = search_field(model_fields, 'title')
+        assert title_field is not None, 'Добавьте свойство `title` модели `Group`'
+        assert type(title_field) == fields.CharField, 'Своство `title` модели `Group` должно быть текстовым `CharField'
+        assert title_field.max_length == 200, 'Максимальная длина свойства `title` модели `Group` должна быть 200'
+
+        slug_field = search_field(model_fields, 'slug')
+        assert slug_field is not None, 'Добавьте свойство `slug` модели `Group`'
+        assert type(slug_field) == fields.SlugField, 'Свойство `slug` модели `Group` должно быть типа `slug`'
+        assert slug_field.unique, 'Свойтво `slug` модели `Group` должно быть уникальным `unique`'
+
+        description_field = search_field(model_fields, 'description')
+        assert description_field is not None, 'Добавьте свойство `description` модели `Group`'
+        assert type(description_field) == fields.TextField, \
+            'Свойство `description` модели `Group` должно быть текстового типа `TextField`'
+        assert group.__str__() == group.title, \
+            'Метод `__str__` модели `Group` должен возвращать название группы `title`'
 
     def test_group_model(self):
         model_fields = Group._meta.fields

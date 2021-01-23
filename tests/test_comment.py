@@ -94,6 +94,7 @@ class TestComment:
 
         assert response.status_code in (301, 302), \
             'Проверьте, что со страницы `/<username>/<post_id>/comment/` после создания комментария перенаправляете на страницу поста'
+
         comment = Comment.objects.filter(text=text, post=post, author=post.author).first()
         assert comment is not None, \
             'Проверьте, что вы создаёте новый комментарий `/<username>/<post_id>/comment/`'

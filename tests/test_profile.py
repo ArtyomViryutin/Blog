@@ -31,9 +31,6 @@ class TestProfileView:
         assert len(page_context.object_list) == 1, \
             'Проверьте, что правильные статьи автора в контекст страницы `/<username>/`'
 
-        paginator_context = get_field_context(response.context, Paginator)
-
-
         new_user = get_user_model()(username='new_user_87123478')
         new_user.save()
         try:

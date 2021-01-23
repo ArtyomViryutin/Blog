@@ -33,6 +33,26 @@ def search_refind(execution, user_code):
 
 
 class TestFollow:
+    def test_follow_fields(self):
+        model_fields = Follow._meta.fields
+
+        user_field = search_field(model_fields, 'user_id')
+        assert user_field is not None, 'Добавьте свойство `user` модели `Follow`'
+        assert type(user_field) == fields.related.ForeignKey, \
+            'Свойство `user` модели `Follow` должно быть ссылкой на другую модель `ForeignKey`'
+        assert user_field.related_model == get_user_model(), \
+            'Свойство `user` модели `Follow` должно быть ссылкой на модель пользователя `User`'
+        assert user_field.remote_field.related_name == 'follower', \
+            'Свойство `user` модели `Follow` длжно иметь атрибут `related_name="follower'
+
+        author_field = search_field(model_fields, 'author_id')
+        assert author_field is not None, 'Добавьте свойство `author` модели `Follow`'
+        assert type(author_field) == fields.related.ForeignKey, \
+            'Свойство `author` модели `Follow` должно ссылаться на другую модель `ForeignKey`'
+        assert author_field.related_model == get_user_model(), \
+            'Свойство `author` модели `Follow` должно ссылаться на модель пользователя `User`'
+        assert author_field.remote_field.related_name == 'following', \
+            'Свойство `author` модели `Follow` дожно иметь атрибут `related_name=following`'
 
     def test_follow(self):
         model_fields = Follow._meta.fields
