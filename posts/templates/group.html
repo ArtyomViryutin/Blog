@@ -4,8 +4,8 @@
 {% block content %}
     <h1>{{ group.title }}</h1>
     <p>{{ group.description }}</p>
-    {% for post in page %}
-    {% include 'post_item.html' with post=post %}
+    {% for post in post_list %}
+    {% include 'include/post_item.html' with post=post %}
     {% endfor %}
     <div class="d-flex justify-content-center">{% include 'paginator.html' with page=page %}</div>
 {% endblock %}

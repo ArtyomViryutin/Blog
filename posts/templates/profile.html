@@ -3,13 +3,13 @@
 
 <main role="main" class="container">
     <div class="row">
-            {% include 'author.html' %}
+            {% include 'include/author.html' %}
 
             <div class="col-md-9">
-                {% for post in page %}
+                {% for post in page_obj %}
 
                 <!-- Начало блока с отдельным постом -->
-                    {% include 'post_item.html' %}
+                    {% include 'include/post_item.html' %}
                 <!-- Конец блока с отдельным постом -->
                 {% endfor %}
                 <!-- Остальные посты -->

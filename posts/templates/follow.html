@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% block title %} {{ request.user }}123 {% endblock %}
-{% block header %} {{ request.user }} 213{% endblock %}
+
+{% block title %} Последние обновления на сайте {% endblock %}
+{% block header %} Последние обновления на сайте {% endblock %}
 
 {% block content %}
-    {% include 'menu.html' with follow=True %}
+    {% include 'include/menu.html' with follow=True %}
     <h1>Последние обновления на сайте</h1>
-    {% for post in page %}
-    {% include 'post_item.html' with post=post %}
-    {% endfor %}
+        {% for post in post_list %}
+        {% include 'include/post_item.html' with post=post %}
+        {% endfor %}
     <div class="d-flex justify-content-center">{% include 'paginator.html' with page=page %}</div>
 {% endblock %}
