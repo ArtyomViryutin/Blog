@@ -1,1 +1,0 @@
-[{"model": "posts.group", "pk": 1, "fields": {"title": "Лeв Толстой", "slug": "leo", "description": "Цитаты Льва Толстого"}}, {"model": "posts.post", "pk": 2, "fields": {"text": 

@@ -64,9 +64,7 @@ class ProfileView(SingleObjectMixin, ListView):
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'post.html'
-    slug_field = 'id'
-    slug_url_kwarg = 'id'
+    template_name = 'post_detail.html'
     context_object_name = 'post'
 
     def get_object(self, queryset=None):
@@ -76,6 +74,8 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
         context['comments'] = self.object.comments.all().order_by('-created')
+        is_subscribed = Follow.objects.filter(author=self.object.author, user=self.request.user)
+        context['is_subscribed'] = is_subscribed
         return context
 
 
@@ -85,7 +85,7 @@ class PostUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
     template_name = 'edit.html'
-    # permission_required =
+    permission_required = 'posts.change_item'
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
